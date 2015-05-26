@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>IonSlidingTabs</title>
+
+    <link href="http://code.ionicframework.com/1.0.0/css/ionic.min.css" rel="stylesheet">
+    <link href="../src/css/slidingTabs.min.css" rel="stylesheet">
+
+    <!-- ionic/angularjs js -->
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://code.ionicframework.com/1.0.0/js/ionic.bundle.min.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="../src/js/slidingTabsDirective.min.js"></script>
+
+    <script>
+        var app = angular.module('starter', ['ionic']);
+
+        app.config(function($stateProvider, $urlRouterProvider) {
+            $stateProvider.state('index', {
+                url : '/',
+                templateUrl : 'index.html',
+                controller : 'MainController'
+            });
+
+            $urlRouterProvider.otherwise("/");
+        });
+
+        app.controller("MainController", [function($rootScope, $scope, $stateParams, $q, $location, $window, $timeout){}]);
+    </script>
+</head>
+
+<body ng-app="starter">
+
+<ion-nav-bar class="bar-positive">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+</ion-nav-bar>
+
+
+<ion-nav-view ng-controller="MainController"></ion-nav-view>
+
+<script id="index.html" type="text/ng-template">
+    <ion-view view-title="Sliding Tabs 1">
+        <ion-content scroll="false">
+            <ion-slide-box slide-tabs-scrollable="false"  show-pager="false" ion-slide-tabs>
+                <ion-slide ion-slide-tab-label="test"><h1>Tab 1</h1></ion-slide>
+                <ion-slide ion-slide-tab-label="secondTest"><h1>Tab 2</h1></ion-slide>
+                <ion-slide ion-slide-tab-label="<b>boldTest</b>"><h1>Tab 3</h1></ion-slide>
+            </ion-slide-box>
+        </ion-content>
+    </ion-view>
+</script>
+</body>
+</html>
