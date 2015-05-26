@@ -1,7 +1,9 @@
 # ion-slide-box-tabs
 This Directive adds Tabs for the Ionic Slidebox with moving indicator at the bottom.
 
-## Description
+## Preview
+
+![alt tag](/example/img/slideTabs.gif)
 
 ## Installation
 
