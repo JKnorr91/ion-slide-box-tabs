@@ -5,9 +5,15 @@ This Directive adds Tabs for the Ionic Slidebox with moving indicator at the bot
 
 ![alt tag](/example/img/slideTabs.gif)
 
+[Demo1](http://knorr.ruhr/ionicSlideBoxTabs/example/example1.html)
+
+[Demo2](http://knorr.ruhr/ionicSlideBoxTabs/example/example2.html)
+
 ## Installation
 
-1. Just add the *slidingTabsDirective.js* to your Ionic Project and include it in your *index.html*.
+1. jQuery must be included into your Ionic Project.
+
+2. Add the *slidingTabsDirective.js* to your Ionic Project and include it in your *index.html*.
 
   Example:
   If you put the *slidingTabsDirective.js* to your *js* folder, your should paste the following line into your *index.html* anywhere after the ionic inclusion.
@@ -16,7 +22,7 @@ This Directive adds Tabs for the Ionic Slidebox with moving indicator at the bot
   <script src="js/slidingTabsDirective.js"></script>
   ```
 
-2. Add the SCSS or the CSS code from *slidingTabs.scss* or *slidingTabs.css* to your project Styles.
+3. Add the SCSS or the CSS code from *slidingTabs.scss* or *slidingTabs.css* to your project Styles.
 
 ## Usage
 
