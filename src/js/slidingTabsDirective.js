@@ -38,15 +38,15 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
                 }
 
 
-                slider = $(element);
+                slider = angular.element(element);
 
                 var compiled = $compile(tabsBar);
-                slider.before(tabsBar);
+                slider.parent().prepend(tabsBar);
                 compiled(scope);
 
                 //get Tabs DOM Elements
-                slideTabs = tabsBar.find("li");
-                indicator = tabsBar.find(".tab-indicator");
+                //slideTabs = angular.element(tabsBar[0].querySelector("ul").querySelector(".slider-slide-tab"));
+                indicator = angular.element(tabsBar[0].querySelector(".tab-indicator"));
 
                 //get the slideBoxHandle
                 var slideHandle = slider.attr('delegate-handle');
@@ -57,7 +57,7 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
                     ionicSlideBoxDelegate = ionicSlideBoxDelegate.$getByHandle(slideHandle);
                 }
 
-                setIndicatorPosition(ionicSlideBoxDelegate.currentIndex(), ionicSlideBoxDelegate.currentIndex(), 1);
+                //setIndicatorPosition(ionicSlideBoxDelegate.currentIndex(), ionicSlideBoxDelegate.currentIndex(), 1);
 
                 if(options.slideTabsScrollable) {
 
@@ -84,74 +84,77 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
             }
 
             var setTabBarWidth = function() {
+
+                if( !angular.isDefined(slideTabs) || slideTabs.length == 0 ) {
+                    return false;
+                }
+
                 //set correct Width for TabBar
                 tabsList = tabsBar.find("ul");
                 var tabsWidth = 0;
 
-                tabsList.find("li").each(function (index) {
+                angular.forEach(slideTabs, function (currentElement,index) {
 
-                    var currentLi = $(this);
-                    tabsWidth += currentLi.outerWidth();
-
-                    ionic.on("click", function (e) {
-
-                        addTabTouchAnimation(e, currentLi);
-                        ionicSlideBoxDelegate.slide(index);
-                        slideToCurrentPosition();
-
-                    },this);
-
+                    var currentLi = angular.element(currentElement);
+                    tabsWidth += currentLi[0].offsetWidth;
                 });
 
                 if(options.slideTabsScrollable) {
 
-                    tabsList.closest(".scroll").css("width", tabsWidth + 1);
+                    angular.element(tabsBar[0].querySelector(".scroll")).css("width", tabsWidth + 1 + "px");
 
                 }
                 else {
 
-                    tabsList.find("li").css("width",tabsList.width() / tabsList.find("li").size());
+                    slideTabs.css("width",tabsList[0].offsetWidth / slideTabs.length + "px");
                 }
 
                 slideToCurrentPosition();
 
             };
 
-            var addTabTouchAnimation = function(event,element) {
+            var addTabTouchAnimation = function(event,currentElement) {
 
-                //create .ink element if it doesn't exist
-                if(element.find(".ink").length == 0) {
-                    element.prepend("<span class='ink'></span>");
+                var ink = angular.element(currentElement[0].querySelector(".ink"));
+
+                if( !angular.isDefined(ink) || ink.length == 0 ) {
+                    ink = angular.element("<span class='ink'></span>");
+                    currentElement.prepend(ink);
                 }
 
-                ink = element.find(".ink");
-                //incase of quick double clicks stop the previous animation
+
                 ink.removeClass("animate");
 
-                //set size of .ink
-                if(!ink.height() && !ink.width())
+                if(!ink.offsetHeight && !ink.offsetWidth)
                 {
-                    //use parent's width or height whichever is larger for the diameter to make a circle which can cover the entire element.
-                    d = Math.max(element.outerWidth(), element.outerHeight());
-                    ink.css({height: d, width: d});
+
+                    d = Math.max(currentElement[0].offsetWidth, currentElement[0].offsetHeight);
+                    ink.css("height", d + "px");
+                    ink.css("width", d + "px");
                 }
 
                 //get click coordinates
                 //logic = click coordinates relative to page - parent's position relative to page - half of self height/width to make it controllable from the center;
-                x = event.pageX - element.offset().left - ink.width()/2;
-                y = event.pageY - element.offset().top - ink.height()/2;
+                x = event.offsetX - ink[0].offsetWidth / 2;
+                y = event.offsetY - ink[0].offsetHeight / 2;
 
                 //set the position and add class .animate
-                ink.css({top: y+'px', left: x+'px'}).addClass("animate");
+                ink.css("top", y +'px');
+                ink.css("left", x +'px');
+                ink.addClass("animate");
             }
 
             var slideToCurrentPosition = function() {
 
+                if( !angular.isDefined(slideTabs) || slideTabs.length == 0 ) {
+                    return false;
+                }
+
                 var targetSlideIndex = ionicSlideBoxDelegate.currentIndex();
 
-                var targetTab = $(slideTabs[targetSlideIndex]);
+                var targetTab = angular.element(slideTabs[targetSlideIndex]);
                 var targetLeftOffset = targetTab.prop("offsetLeft");
-                var targetWidth = targetTab.outerWidth();
+                var targetWidth = targetTab[0].offsetWidth;
 
 
 
@@ -179,16 +182,17 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
                     return;
                 }
 
-                var targetTab = $(slideTabs[targetSlideIndex]);
-                var currentTab = $(slideTabs[currentSlideIndex]);
+                var targetTab = angular.element(slideTabs[targetSlideIndex]);
+                var currentTab = angular.element(slideTabs[currentSlideIndex]);
 
                 var targetLeftOffset = targetTab.prop("offsetLeft");
                 var currentLeftOffset = currentTab.prop("offsetLeft");
                 var offsetLeftDiff = Math.abs(targetLeftOffset - currentLeftOffset);
 
 
-                var targetWidth = targetTab.outerWidth();
-                var currentWidth = currentTab.outerWidth();
+
+                var targetWidth = targetTab[0].offsetWidth;
+                var currentWidth = currentTab[0].offsetWidth;
                 var widthDiff = targetWidth - currentWidth;
 
                 var indicatorPos = 0;
@@ -222,10 +226,22 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
 
             }
 
+            scope.onTabTabbed = function(event, index) {
+                addTabTouchAnimation(event, angular.element(event.currentTarget) );
+                ionicSlideBoxDelegate.slide(index);
+                slideToCurrentPosition();
+            }
+
             scope.addTabContent = function ($content) {
-                var newItem = $("<li></li>").html($content);
+                var tabIndex = angular.isDefined(slideTabs)?slideTabs.length:0;
+                var newItem = angular.element('<li ng-click="onTabTabbed($event, '+ tabIndex +')" class="slider-slide-tab"></li>').html($content);
+
+                var compiled = $compile(newItem);
+                compiled(scope);
                 tabsBar.find("ul").append(newItem);
-                slideTabs = tabsBar.find("li");
+
+                slideTabs = angular.element(tabsBar[0].querySelector("ul").querySelectorAll(".slider-slide-tab"));
+
                 slideToCurrentPosition();
                 setTabBarWidth()
             }
@@ -235,22 +251,22 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
             };
 
             scope.onSlideMove = function () {
-                var scrollDiv = slider.find(".slider-slide");
-
+                var scrollDiv = slider[0].getElementsByClassName("slider-slide");
 
                 var currentSlideIndex = ionicSlideBoxDelegate.currentIndex();
-                var currentSlide = $(scrollDiv[currentSlideIndex]);
+                var currentSlide = angular.element(scrollDiv[currentSlideIndex]);
+                var currentSlideLeftOffset = currentSlide.css('-webkit-transform').replace(/[^0-9\-.,]/g, '').split(',')[0];
 
-                var targetSlideIndex = (currentSlideIndex + 1) % scrollDiv.size();
-                if (currentSlide.offset().left > currentSlide.closest(".slider").offset().left) {
+                var targetSlideIndex = (currentSlideIndex + 1) % scrollDiv.length;
+                if (currentSlideLeftOffset > slider.prop("offsetLeft")) {
                     targetSlideIndex = currentSlideIndex - 1;
                     if (targetSlideIndex < 0) {
-                        targetSlideIndex = scrollDiv.size() - 1;
+                        targetSlideIndex = scrollDiv.length - 1;
                     }
                 }
-                var targetSlide = $(scrollDiv[targetSlideIndex]);
+                var targetSlide = angular.element(scrollDiv[targetSlideIndex]);
 
-                var position = Math.abs(currentSlide.offset().left / targetSlide.closest(".slider").width());
+                var position = Math.abs(currentSlideLeftOffset / slider[0].offsetWidth);
 
                 setIndicatorPosition(currentSlideIndex, targetSlideIndex, position);
             };
