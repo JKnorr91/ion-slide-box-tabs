@@ -44,7 +44,7 @@ Currently there ist only one attribute to change the behaviour of the tabs:
 
 |Attribute|Type|Default|Description
 |-----------|------|-------------|---------|
-| scrollable | boolean | *true* | Wheter the tabs should be scrollable (*true*) or fill up the viewport width (*false*). In case of *false*, every tab will have the same size.
+| slide-tabs-scrollable | boolean | *true* | Wheter the tabs should be scrollable (*true*) or fill up the viewport width (*false*). In case of *false*, every tab will have the same size.
 
 
 ## Styling
