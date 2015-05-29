@@ -6,7 +6,7 @@
     <title>IonSlidingTabs</title>
 
     <link href="http://code.ionicframework.com/1.0.0/css/ionic.min.css" rel="stylesheet">
-    <link href="../src/css/slidingTabs.min.css" rel="stylesheet">
+    <link href="../src/css/slidingTabs.css" rel="stylesheet">
 
     <!-- ionic/angularjs js -->
     <!-- <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script> -->
@@ -31,7 +31,9 @@
             $urlRouterProvider.otherwise("/");
         });
 
-        app.controller("MainController", [function($rootScope, $scope, $stateParams, $q, $location, $window, $timeout){}]);
+        app.controller("MainController", ['$scope',function($scope){
+            $scope.test = "abc";
+        }]);
     </script>
 </head>
 
