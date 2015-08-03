@@ -1,3 +1,6 @@
+**Note**: This repo was forked from https://github.com/JKnorr91/ion-slide-box-tabs but has been customized a lot and differs from original repo significantly.
+
+
 # ion-slide-box-tabs
 This Directive adds Tabs for the Ionic Slidebox with moving indicator at the bottom.
 
@@ -45,13 +48,3 @@ Currently there ist only one attribute to change the behaviour of the tabs:
 |Attribute|Type|Default|Description
 |-----------|------|-------------|---------|
 | slide-tabs-scrollable | boolean | *true* | Wheter the tabs should be scrollable (*true*) or fill up the viewport width (*false*). In case of *false*, every tab will have the same size.
-
-
-## Styling
-I gave my best to give the tabs the look & feel of the Android Tabs, described in Google's [Material Design specification](http://www.google.com/design/spec/components/tabs.html).
-If you want to give the tabs your own look, feel free to edit the styles in *slidingTabs.scss* or *slidingTabs.css*.
-
-## Donate
-
-If you like my work and want to say thanks, [you can buy me a beer or a cup of coffe.](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=62CTVYDHF5LM8)
-
