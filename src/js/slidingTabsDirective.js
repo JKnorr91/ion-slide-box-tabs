@@ -29,7 +29,12 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
 
                 if(options.slideTabsScrollable) {
 
-                    ionicScrollDelegateID = "ion-slide-tabs-handle-" + Math.floor((Math.random() * 10000) + 1);
+                    if(angular.isDefined(attrs.scrollDelegateHandle) && attrs.scrollDelegateHandle) {
+                      ionicScrollDelegateID = attrs.scrollDelegateHandle;
+                    }
+                    else {
+                      ionicScrollDelegateID = "ion-slide-tabs-handle-" + Math.floor((Math.random() * 10000) + 1);
+                    }
                     tabsBar = angular.element('<ion-scroll delegate-handle="' + ionicScrollDelegateID + '" class="slidingTabs" direction="x" scrollbar-x="false"><ul>' + tabItems + '</ul> <div class="tab-indicator-wrapper"><div class="tab-indicator"></div></div> </ion-scroll>');
 
                 }
@@ -155,7 +160,7 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
 
 
                 indicator.css({
-                    "-webkit-transition-duration": "300ms",
+                    "-webkit-transition-duration": "50ms",
                     "-webkit-transform":"translate(" + targetLeftOffset + "px,0px)",
                     "width": targetWidth + "px"
                 });
@@ -223,7 +228,9 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
             }
 
             scope.onTabTabbed = function(event, index) {
-                addTabTouchAnimation(event, angular.element(event.currentTarget) );
+                if (angular.isUndefined(attrs.ionSlideTouchAnimation) || attrs.ionSlideTouchAnimation !== "false" ) {
+                  addTabTouchAnimation(event, angular.element(event.currentTarget) );
+                }
                 ionicSlideBoxDelegate.slide(index);
                 slideToCurrentPosition();
             }
