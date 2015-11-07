@@ -152,12 +152,12 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
                 var targetLeftOffset = targetTab.prop("offsetLeft");
                 var targetWidth = targetTab[0].offsetWidth;
 
-
-
                 indicator.css({
-                    "-webkit-transition-duration": "300ms",
-                    "-webkit-transform":"translate(" + targetLeftOffset + "px,0px)",
-                    "width": targetWidth + "px"
+                  "-webkit-transition-duration": "300ms",
+                  "-webkit-transform":"translate(" + targetLeftOffset + "px,0px)",
+                  "transition-duration": "300ms",
+                  "transform":"translate(" + targetLeftOffset + "px,0px)",
+                  "width": targetWidth + "px"
                 });
 
                 if (options.slideTabsScrollable && ionicScrollDelegate) {
