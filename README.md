@@ -2,7 +2,8 @@
 This Directive adds Tabs for the Ionic Slidebox with moving indicator at the bottom, with possibility to have tabs with icons or text.
 This is an added feature from [JKnorr91](https://github.com/JKnorr91/)'s [ion-slide-box-tabs](https://github.com/JKnorr91/ion-slide-box-tabs) plugin.
 
-Please check the examples.
+Please check the examples folder.
+Also, remember to create the css classes for your icons.
 
 ## Preview & Demo
 
