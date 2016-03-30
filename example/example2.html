@@ -6,7 +6,7 @@
     <title>IonSlidingTabs</title>
 
     <link href="http://code.ionicframework.com/1.0.0/css/ionic.min.css" rel="stylesheet">
-    <link href="../src/css/slidingTabs.min.css" rel="stylesheet">
+    <link href="../src/css/slidingTabs.css" rel="stylesheet">
 
     <!-- ionic/angularjs js -->
     <script src="http://code.ionicframework.com/1.0.0/js/ionic.bundle.min.js"></script>
@@ -47,13 +47,13 @@
 <script id="index.html" type="text/ng-template">
     <ion-view view-title="Sliding Tabs 2">
         <ion-content scroll="false">
-            <ion-slide-box slide-tabs-scrollable="true"  show-pager="false" ion-slide-tabs>
-                <ion-slide ion-slide-tab-label="tab"><h1>Tab 1</h1></ion-slide>
-                <ion-slide ion-slide-tab-label="another tab"><h1>Tab 2</h1></ion-slide>
-                <ion-slide ion-slide-tab-label="tab3"><h1>Tab 3</h1></ion-slide>
-                <ion-slide ion-slide-tab-label="another tab again"><h1>Tab 4</h1></ion-slide>
-                <ion-slide ion-slide-tab-label="a very large tab"><h1>Tab 5</h1></ion-slide>
-                <ion-slide ion-slide-tab-label="tab6"><h1>Tab 6</h1></ion-slide>
+            <ion-slide-box slide-tabs-scrollable="true" show-pager="false" ion-slide-tabs>
+                <ion-slide ion-slide-tab-icon-label ion-slide-tab-label="tab"><h1>Tab 1</h1></ion-slide>
+                <ion-slide ion-slide-tab-icon-label ion-slide-tab-label="another tab"><h1>Tab 2</h1></ion-slide>
+                <ion-slide ion-slide-tab-icon-label ion-slide-tab-icon="apple"><h1>Tab 3</h1></ion-slide>
+                <ion-slide ion-slide-tab-icon-label ion-slide-tab-label="another tab again"><h1>Tab 4</h1></ion-slide>
+                <ion-slide ion-slide-tab-icon-label ion-slide-tab-label="a very large tab"><h1>Tab 5</h1></ion-slide>
+                <ion-slide ion-slide-tab-icon-label ion-slide-tab-label="tab6"><h1>Tab 6</h1></ion-slide>
             </ion-slide-box>
         </ion-content>
     </ion-view>

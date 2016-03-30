@@ -25,7 +25,7 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
                     options.slideTabsScrollable = false;
                 }
 
-                var tabItems = '<li ng-repeat="(key, value) in tabs" ng-click="onTabTabbed($event, {{key}})" class="slider-slide-tab" ng-bind-html="value"></li>';
+                var tabItems = '<li ng-repeat="(key, value) in tabs" ng-click="onTabTabbed($event, {{key}})" class="slider-slide-tab" ion-tab-value="{{value}}"></li>';
 
                 if(options.slideTabsScrollable) {
 
@@ -284,11 +284,36 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
     };
 }]);
 
-slidingTabsDirective.directive('ionSlideTabLabel', [ function() {
+slidingTabsDirective.directive('ionSlideTabIconLabel', [ function() {
     return {
         require: "^ionSlideTabs",
         link: function ($scope, $element, $attrs, $parent) {
-            $parent.addTab($attrs.ionSlideTabLabel);
+            if(!angular.isDefined($attrs.ionSlideTabIcon) && !angular.isDefined($attrs.ionSlideTabLabel)) {
+                return;
+            }
+
+            var iconLabel = {icon: $attrs.ionSlideTabIcon, label: $attrs.ionSlideTabLabel};
+            $parent.addTab(iconLabel);
+        }
+    }
+}]);
+
+slidingTabsDirective.directive('ionTabValue', [ '$timeout', '$compile', function($timeout, $compile) {
+    return {
+        link: function($scope, element, attrs, $parent) {
+            var obj = JSON.parse(attrs.ionTabValue);
+
+            $timeout(function() {
+                if(angular.isDefined(obj.icon) && obj.icon.length > 0) {
+                    element.addClass('ion-tab-icon-' + obj.icon);
+                }
+                else if(angular.isDefined(obj.label) && obj.label.length > 0) {
+                    element[0].innerHTML = obj.label;
+                    $compile(element.contents())($scope);
+                }
+
+            }, 1);
+
         }
     }
 }]);
