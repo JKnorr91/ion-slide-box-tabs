@@ -25,7 +25,7 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', ['$
                     options.slideTabsScrollable = false;
                 }
 
-                var tabItems = '<li ng-repeat="(key, value) in tabs" ng-click="onTabTabbed($event, {{key}})" class="slider-slide-tab" ng-bind-html="value"></li>';
+                var tabItems = '<li ng-repeat="(key, value) in tabs" ng-click="onTabTabbed($event, {{key}})" class="slider-slide-tab" compile-html="value"></li>';
 
                 if(options.slideTabsScrollable) {
 
@@ -291,4 +291,18 @@ slidingTabsDirective.directive('ionSlideTabLabel', [ function() {
             $parent.addTab($attrs.ionSlideTabLabel);
         }
     }
+}]);
+
+slidingTabsDirective.directive('compileHtml', ['$compile', function ($compile) {
+    return function (scope, element, attrs) {
+        scope.$watch(
+            function (scope) {
+                return scope.$eval(attrs["compileHtml"]);
+            },
+            function (value) {
+                element.html(value);
+                $compile(element.contents())(scope);
+            }
+        );
+    };
 }]);
