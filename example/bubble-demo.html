@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>IonSlidingTabs</title>
+
+    <link href="http://code.ionicframework.com/1.0.0/css/ionic.min.css" rel="stylesheet">
+    <link href="../src/css/slidingTabs.css" rel="stylesheet">
+    <link href="../src/css/red_bubble.css" rel="stylesheet">
+    <style rel="stylesheet">
+        .red-bubble:after {
+            position: absolute;
+            top: 10px;
+            border-radius: 10px;
+            width: auto;
+            min-width: 14px;
+            height: 14px;
+            line-height: 14px;
+            text-align: center;
+            background: #ff4845;
+            content: '';
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .bubble-content:after {
+            padding: 1px;
+            background: red;
+            content: attr(counter);
+        }
+
+        .red-bubble-hide:after {
+            display: none;
+        }
+
+    </style>
+    <!-- ionic/angularjs js -->
+    <!-- <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script> -->
+    <script src="http://code.ionicframework.com/1.0.0/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="../src/js/slidingTabsDirective.js"></script>
+
+    <script>
+        var app = angular.module('starter', ['ionic', "redBubble"]);
+
+        app.config(function ($stateProvider, $urlRouterProvider) {
+            $stateProvider.state('index', {
+                url: '/',
+                templateUrl: 'index.html',
+                controller: 'MainController'
+            });
+
+            $urlRouterProvider.otherwise("/");
+        });
+
+        app.controller("MainController", ['$scope', 'RedBubbleFactory', function ($scope, RedBubbleFactory) {
+            $scope.test = "abc";
+            $scope.bubbles = RedBubbleFactory.bubbles;
+            $scope.increase_counter = function (id) {
+                RedBubbleFactory.bubbles[id].increase();
+            }
+            $scope.decrease_counter = function (id) {
+                RedBubbleFactory.bubbles[id].decrease();
+            }
+        }]);
+    </script>
+</head>
+
+<body ng-app="starter">
+
+<ion-nav-bar class="bar-positive">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+</ion-nav-bar>
+
+
+<ion-nav-view ng-controller="MainController"></ion-nav-view>
+
+<script id="index.html" type="text/ng-template">
+    <ion-view view-title="Sliding Tabs 1">
+        <ion-content scroll="false">
+            <ion-slide-box slide-tabs-scrollable="false" show-pager="false" ion-slide-tabs>
+                <ion-slide ion-slide-tab-label="<b red-bubble='bubble1'>Bubble1</b>">
+                    <ion-list>
+                        <ion-item ng-repeat="bubble in bubbles">
+                            <label>{{bubble._id}}: {{bubble.counter}}</label>
+                            <button class="button button-positive" ng-click="increase_counter(bubble._id)">Increase
+                            </button>
+                            <button class="button button-positive" ng-click="decrease_counter(bubble._id)">Decrease
+                            </button>
+                        </ion-item>
+                    </ion-list>
+                </ion-slide>
+                <ion-slide ion-slide-tab-label="<b red-bubble='bubble2'>Bubble2</b>"><h1>Bubble2</h1></ion-slide>
+                <ion-slide ion-slide-tab-label="<b red-bubble='bubble3' bubble_only='true'>BubbleOnly</b>"><h1>Bubble
+                    only</h1></ion-slide>
+            </ion-slide-box>
+        </ion-content>
+    </ion-view>
+</script>
+
+
+<script>
+    (function () {
+        // use [redBubble](https://github.com/sxxymzy/angular-tool-kits/tree/master/angular-red-bubble) for example
+        var redBubble = angular.module("redBubble", []);
+        redBubble.directive("redBubble", function (RedBubbleFactory) {
+            return {
+                restrict: 'A',
+                scope: {
+                    'bubble_id': '@redBubble',
+                    'bubble_only': '@bubbleOnly'
+                },
+                link: function (scope, elm) {
+                    RedBubbleFactory.set_bubble(scope.bubble_id, 0);
+                    scope.bubbles = RedBubbleFactory.bubbles;
+                    scope.$watch("bubbles." + scope.bubble_id + ".counter", function (newV) {
+                        elm.addClass('red-bubble');
+                        if (typeof newV != "undefined") {
+                            elm.attr("counter", newV);
+                            if (!(scope.bubble_only && scope.bubble_only.toLowerCase() == 'true')) {
+                                elm.addClass('bubble-content');
+                            }
+                            if (newV <= 0) {
+                                elm.addClass('red-bubble-hide');
+                            }
+                            else {
+                                elm.removeClass('red-bubble-hide');
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        redBubble.factory("RedBubbleFactory", function () {
+            var self = this;
+            var _bubbles = {};
+
+            function Bubble(id, counter) {
+                var bb = this;
+                var _id = id;
+                bb.counter = angular.isUndefined(counter) ? 0 : counter;
+
+                bb._id = id;
+
+                bb.set_counter = function (new_counter) {
+                    bb.counter = new_counter
+                };
+
+                bb.increase = function () {
+                    bb.counter++;
+                };
+
+                bb.decrease = function () {
+                    if (bb.counter > 0)
+                        bb.counter--;
+                    else
+                        bb.counter = 0;
+                };
+
+                bb.clear_counter = function () {
+                    bb.counter = 0;
+                }
+            }
+
+            angular.extend(self, {
+                bubbles: _bubbles,
+                set_bubble: function (id, counter) {
+                    if (_bubbles.hasOwnProperty(id)) {
+                        _bubbles[id].set_counter(counter);
+                    }
+                    else {
+                        _bubbles[id] = new Bubble(id, counter);
+                    }
+                }
+            });
+            return self;
+        });
+    })();
+</script>
+</body>
+</html>
