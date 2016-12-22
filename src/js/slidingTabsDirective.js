@@ -19,7 +19,8 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', [
                 var tabsBar;
 
                 var options = {
-                    "slideTabsScrollable": true
+                    "slideTabsScrollable": true,
+                    "slideTabsBottom" : false
                 };
 
                 var init = function () {
@@ -28,20 +29,51 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', [
                         options.slideTabsScrollable = false;
                     }
 
+                    if(angular.isDefined( attrs.slideTabsBottom ) && attrs.slideTabsBottom === "true" ) {
+                        options.slideTabsBottom = true;
+                    }
+
                     var tabItems = '<li ng-repeat="(key, value) in tabs" ng-click="onTabTabbed($event, {{key}})" class="slider-slide-tab" tab-compile="value"></li>';
+
+                    var indicatorHtml = '<div class="tab-indicator-wrapper"><div class="tab-indicator"></div></div>';
 
                     if(options.slideTabsScrollable) {
                         ionicScrollDelegateID = "ion-slide-tabs-handle-" + scope.delegateID;
-                        tabsBar = angular.element('<ion-scroll delegate-handle="' + ionicScrollDelegateID + '" class="slidingTabs" direction="x" scrollbar-x="false"><ul>' + tabItems + '</ul> <div class="tab-indicator-wrapper"><div class="tab-indicator"></div></div> </ion-scroll>');
+                        if(options.slideTabsBottom) {
+                            tabsBar = angular.element('<ion-scroll delegate-handle="' + ionicScrollDelegateID + '" class="slidingTabs tabs-bottom" direction="x" scrollbar-x="false"> ' + indicatorHtml + ' <ul>' + tabItems + '</ul></ion-scroll>');
+                        }
+                        else {
+                            tabsBar = angular.element('<ion-scroll delegate-handle="' + ionicScrollDelegateID + '" class="slidingTabs" direction="x" scrollbar-x="false"><ul>' + tabItems + '</ul> ' + indicatorHtml + ' </ion-scroll>');
+                        }
                     }
                     else {
-                        tabsBar = angular.element('<div class="slidingTabs"><ul>' + tabItems + '</ul> <div class="tab-indicator-wrapper"><div class="tab-indicator"></div></div> </div>');
+                        if(options.slideTabsBottom) {
+                            tabsBar = angular.element('<div class="slidingTabs tabs-bottom"> ' + indicatorHtml + ' <ul>' + tabItems + '</ul></div>');
+                        }
+                        else {
+                            tabsBar = angular.element('<div class="slidingTabs"><ul>' + tabItems + '</ul> ' + indicatorHtml + ' </div>');
+                        }
                     }
 
                     slider = angular.element(element);
 
+                    if(options.slideTabsBottom){
+                        slider.parent().append(tabsBar);
+                        slider.addClass("tabs-bottom");
+                    }
+                    else{
+                        slider.parent().prepend(tabsBar);
+                    }
+
                     var compiled = $compile(tabsBar);
-                    slider.parent().prepend(tabsBar);
+
+                    if(options.slideTabsBottom){
+                        slider.parent().append(tabsBar);
+                        slider.addClass("tabs-bottom");
+                    }
+                    else{
+                        slider.parent().prepend(tabsBar);
+                    }
                     compiled(scope);
 
                     //get Tabs DOM Elements
@@ -260,7 +292,6 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', [
             controller: ['$scope',function($scope) {
                 this.addTab = function($content) {
                     $timeout(function() {
-                        console.log("addTabContent", $content);
                         if($scope.addTabContent) {
                             $scope.addTabContent($content);
                         }
