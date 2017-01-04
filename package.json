@@ -1,6 +1,6 @@
 {
   "name": "IonicSlideBoxTabs",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "An Add-On directive for the ion-slide-box, that adds tabs to the slide box, known from the Android Material Design specification",
   "main": "index.js",
   "directories": {

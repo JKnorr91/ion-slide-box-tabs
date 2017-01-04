@@ -243,8 +243,10 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', [
 
                 scope.onTabTabbed = function(event, index) {
                     addTabTouchAnimation(event, angular.element(event.currentTarget) );
-                    ionicSlideBoxDelegate.slide(index);
-                    slideToCurrentPosition();
+                    if(!scope.tabsDisabledSlide[index]){
+                        ionicSlideBoxDelegate.slide(index);
+                        slideToCurrentPosition();
+                    }
                 };
 
                 scope.compileTab = function(index){
@@ -257,17 +259,22 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', [
                 };
 
                 scope.tabs = [];
+                scope.tabsDisabledSlide = [];
 
-                scope.addTabContent = function ($content) {
+                scope.addTabContent = function ($content, $disableSlide) {
 
                     scope.tabs.push($content);
+                    scope.tabsDisabledSlide.push($disableSlide);
                     scope.$apply();
 
-                    $timeout(function() {
-                        slideTabs = angular.element(tabsBar[0].querySelector("ul").querySelectorAll(".slider-slide-tab"));
-                        slideToCurrentPosition();
-                        setTabBarWidth()
-                    });
+                    $timeout(function($disableSlide) {
+                        return function() {
+                            slideTabs = angular.element(tabsBar[0].querySelector("ul").querySelectorAll(".slider-slide-tab"));
+                            if(!$disableSlide)
+                                slideToCurrentPosition();
+                            setTabBarWidth()
+                        };
+                    }($disableSlide), 0);
                 };
 
                 scope.onSlideChange = function (slideIndex) {
@@ -300,10 +307,10 @@ var slidingTabsDirective = angular.module("ionic").directive('ionSlideTabs', [
                 init();
             },
             controller: ['$scope',function($scope) {
-                this.addTab = function($content) {
+                this.addTab = function($content, disableSlide) {
                     $timeout(function() {
                         if($scope.addTabContent) {
-                            $scope.addTabContent($content);
+                            $scope.addTabContent($content, disableSlide);
                         }
                     });
                 }
@@ -339,8 +346,11 @@ slidingTabsDirective.directive('ionSlideTabLabel', [ function($timeout) {
         restrict: "E",
         require: "^ionSlideTabs",
         link: function ($scope, $element, $attrs, $parent) {
-            $parent.addTab($element[0].innerHTML);
-            $element.remove();
+            var disableSlide = false;
+            if(angular.isDefined($attrs.disableSlide) && $attrs.disableSlide === "true")
+                disableSlide = true;
+            $parent.addTab($element[0].innerHTML, disableSlide);
+            $element.css("display", "none");
         }
     }
 }]);

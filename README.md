@@ -62,6 +62,14 @@ Currently there ist only one attribute to change the behaviour of the tabs:
 | slide-tabs-icon-top | boolean | *false* | Wheter the tabs has icon at top and title at bottom of tab's label (*true*) or simple tab (*false*).
 
 
+On `ion-slide-tab-label` tag can use the following attributes:
+
+
+|Attribute|Type|Default|Description
+|-----------|------|-------------|---------|
+| disable-slide | boolean | *true* | Wheter the slide should be disabled from slide (*true*) or normal status (*false*).
+
+
 ## Styling
 I gave my best to give the tabs the look & feel of the Android Tabs, described in Google's [Material Design specification](http://www.google.com/design/spec/components/tabs.html).
 If you want to give the tabs your own look, feel free to edit the styles in *slidingTabs.scss* or *slidingTabs.css*.
