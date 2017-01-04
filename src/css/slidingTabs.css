@@ -10,7 +10,12 @@ ion-slide:nth-child(2n) {
     height: 100%;
 }
 
+.slider.tabs-bottom {
+    height: calc(100% - 48px);
+}
+
 .slidingTabs {
+    position: relative;
     height: 48px;
     z-index: 10;
 }
@@ -71,6 +76,15 @@ ion-slide:nth-child(2n) {
     background-color: #fff;
     width: 70px;
     position: relative;
+}
+
+.slidingTabs.tabs-bottom .tab-indicator-wrapper {
+    top: 2px;
+    z-index: 10;
+}
+
+.slidingTabs.tabs-bottom ul {
+    padding-top: 2px;
 }
 
 @-webkit-keyframes ripple {
